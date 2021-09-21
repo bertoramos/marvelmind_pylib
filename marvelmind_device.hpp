@@ -61,7 +61,6 @@ class MarvelMindDevice {
 
 void MarvelMindDevice::start()
 {
-    cout << "Serial port start" << hedge__->ttyFileName;
     startMarvelmindHedge(hedge__);
 }
 
