@@ -842,6 +842,7 @@ void startMarvelmindHedge (struct MarvelmindHedge * hedge)
 #else
     pthread_create (&hedge->thread_, NULL, Marvelmind_Thread_, hedge);
 #endif
+
 }
 
 //////////////////////////////////////////////////////////////////////////////

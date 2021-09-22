@@ -40,8 +40,6 @@ class MarvelMindDevice {
             hedge__->ttyFileName = new_serial_port;
             hedge__->verbose = verbose;
 
-            // cout << "Serial port : " << serialPort << endl;
-            // cout << "Serial port OUT : " << hedge__->ttyFileName << endl;
         };
         
         void start();
@@ -51,9 +49,6 @@ class MarvelMindDevice {
 
         map<int, vector<double>> getMobileBeaconsPosition();
         map<int, vector<double>> getStationaryBeaconsPosition();
-
-        // vector<double> getPosition();
-        // vector<vector<double>> getStationaryBeacons();
         
     private:
         struct MarvelmindHedge * hedge__;
@@ -83,8 +78,6 @@ map<int, vector<double>> MarvelMindDevice::getMobileBeaconsPosition()
 
     uint8_t i, j;
     double xm, ym, zm;
-
-    cout << "";
 
     if (hedge__->haveNewValues_)
     {
@@ -124,10 +117,7 @@ map<int, vector<double>> MarvelMindDevice::getMobileBeaconsPosition()
 map<int, vector<double>> MarvelMindDevice::getStationaryBeaconsPosition()
 {
     map<int, vector<double>> result;
-    // printStationaryBeaconsPositionsFromMarvelmindHedge(hedge__, true);
-
-    cout << "";
-
+    
     struct StationaryBeaconsPositions positions;
     getStationaryBeaconsPositionsFromMarvelmindHedge(hedge__, &positions);
     if(positions.updated) {

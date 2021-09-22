@@ -113,11 +113,22 @@ def main():
         print(dev, " not recognized")
         return
 
+    import serial
+    try:
+        serial_port = serial.Serial(dev)
+        if serial_port.is_open:
+            serial_port.close()
+            del serial_port
+    except:
+        print(f"Serial port {dev} not available")
+        return
+
+    thread = None
     try:
         thread = MarvelmindThread(device=dev, verbose=True)
         thread.start()
     except Exception as ex:
-        #thread.close_device()
+        if thread is not None: thread.close_device()
         print(ex)
         return
     
@@ -129,7 +140,7 @@ def main():
                 
                 if cmd[1] == "all":
                     print(thread)
-
+                
                 if cmd[1] == "stats":
                     for b in thread.getStationaryBeacons():
                         print(b)
