@@ -998,7 +998,7 @@ struct PositionValue
 };
 */
 
-struct PositionValue* getMobilePositionFromModem (struct MarvelmindHedge * hedge,
+struct PositionValue* getMobilePosition (struct MarvelmindHedge * hedge,
                                                  bool onlyNew,
                                                  int* resultSize)
 {

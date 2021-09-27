@@ -224,7 +224,7 @@ void printQualityFromMarvelmindHedge(struct MarvelmindHedge * hedge,
 
 void stopMarvelmindHedge (struct MarvelmindHedge * hedge);
 
-struct PositionValue* getMobilePositionFromModem (struct MarvelmindHedge * hedge,
+struct PositionValue* getMobilePosition (struct MarvelmindHedge * hedge,
                                                  bool onlyNew,
                                                  int* resultSize);
 

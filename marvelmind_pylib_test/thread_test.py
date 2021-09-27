@@ -8,6 +8,7 @@ import marvelmind_pylib as mpl
 @dataclass
 class Beacon:
     address: int
+    timestamp: float
 
     x: float
     y: float
@@ -38,9 +39,7 @@ class MarvelmindThread(StoppableThread):
         super(MarvelmindThread, self).__init__(*args, **kwargs)
 
         self.__dev = mpl.MarvelMindDevice(self.__tty_dev, self.__verbose)
-        rescode = self.__dev.start()
-        if not rescode:
-            raise Exception("Error")
+        self.__dev.start()
         
         self.__beacons = {}
     
@@ -50,6 +49,7 @@ class MarvelmindThread(StoppableThread):
 
         for address, xyz in mobile_pos.items():
             current_beacon = Beacon(address,
+                                    xyz[3],
                                     xyz[0], xyz[1], xyz[2],
                                     False)
             
@@ -57,6 +57,7 @@ class MarvelmindThread(StoppableThread):
 
         for address, xyz in stationary_pos.items():
             current_beacon = Beacon(address,
+                                    0,
                                     xyz[0], xyz[1], xyz[2],
                                     True)
             

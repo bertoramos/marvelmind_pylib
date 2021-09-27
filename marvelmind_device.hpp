@@ -85,7 +85,7 @@ map<int, vector<double>> MarvelMindDevice::getMobileBeaconsPosition()
         struct PositionValue* poses;
         
         int resultSize = 0;
-        poses = getMobilePositionFromModem(hedge__, true, &resultSize);
+        poses = getMobilePosition (hedge__, true, &resultSize);
         
         
         if(poses == NULL) {
@@ -97,15 +97,18 @@ map<int, vector<double>> MarvelMindDevice::getMobileBeaconsPosition()
             PositionValue position = poses[i];
             uint8_t address = position.address;
             double xm, ym, zm;
+            double tm;
 
             xm = ((double) position.x)/1000.0;
             ym = ((double) position.y)/1000.0;
             zm = ((double) position.z)/1000.0;
+            tm = ((double) position.timestamp);
 
             vector<double> pos;
             pos.push_back(xm);
             pos.push_back(ym);
             pos.push_back(zm);
+            pos.push_back(tm);
 
             result[address] = pos;
         }
@@ -135,7 +138,7 @@ map<int, vector<double>> MarvelMindDevice::getStationaryBeaconsPosition()
             pos.push_back(xm);
             pos.push_back(ym);
             pos.push_back(zm);
-
+            
             result[addr] = pos;
         }
     }
