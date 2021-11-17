@@ -96,19 +96,21 @@ map<int, vector<double>> MarvelMindDevice::getMobileBeaconsPosition()
         {   
             PositionValue position = poses[i];
             uint8_t address = position.address;
-            double xm, ym, zm;
+            double xm, ym, zm, angle;
             double tm;
 
+            tm = ((double) position.timestamp);
             xm = ((double) position.x)/1000.0;
             ym = ((double) position.y)/1000.0;
             zm = ((double) position.z)/1000.0;
-            tm = ((double) position.timestamp);
+            angle = ((double) position.angle);
 
             vector<double> pos;
+            pos.push_back(tm);
             pos.push_back(xm);
             pos.push_back(ym);
             pos.push_back(zm);
-            pos.push_back(tm);
+            pos.push_back(angle);
 
             result[address] = pos;
         }

@@ -1,7 +1,7 @@
 
 import marvelmind_pylib
 
-dev = marvelmind_pylib.MarvelMindDevice("/dev/ttyACM1", True)
+dev = marvelmind_pylib.MarvelMindDevice("COM5", True)
 dev.start()
 
 while True:
