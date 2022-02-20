@@ -90,6 +90,64 @@ class MarvelmindThread(StoppableThread):
             self.execute()
 
 
+from threading import Lock
+
+class Singleton(type):
+    _instances = {}
+
+    _lock: Lock = Lock()
+
+    def __call__(cls, *args, **kwargs):
+        with cls._lock:
+            if cls not in cls._instances:
+                instance = super().__call__(*args, **kwargs)
+                cls._instances[cls] = instance
+        return cls._instances[cls]
+
+
+class MarvelmindHandler(metaclass=Singleton):
+
+    def __init__(self):
+        self.__thread = None
+
+    def start(self, device, verbose):
+        if self.__thread is None:
+            self.dev = device
+            self.__thread = MarvelmindThread(device=device, verbose=verbose)
+            self.__thread.start()
+
+    def stop(self):
+        if self.__thread is not None and not self.__thread.stopped():
+            self.__thread.stop()
+            self.__thread.join()
+
+            self.__thread = None
+            print("Stopped")
+        else:
+            raise Exception("Thread is not started")
+
+    def getBeacon(self, address):
+        if self.__thread is not None:
+            return self.__thread.getBeacon(address=address)
+        else:
+            raise Exception("Thread is not started")
+
+    def getAll(self):
+        if self.__thread is not None:
+            return self.__thread.getAll()
+        else:
+            raise Exception("Thread is not started")
+
+    def getStationaryBeacons(self):
+        if self.__thread is not None:
+            return self.__thread.getStationaryBeacons()
+        else:
+            raise Exception("Thread is not started")
+
+    def isRunning(self):
+        return self.__thread is not None
+
+
 def parse():
     import sys
     import argparse
@@ -124,12 +182,10 @@ def main():
         print(f"Serial port {dev} not available")
         return
 
-    thread = None
+
     try:
-        thread = MarvelmindThread(device=dev, verbose=True)
-        thread.start()
+        MarvelmindHandler().start(dev, True)
     except Exception as ex:
-        if thread is not None: thread.close_device()
         print(ex)
         return
 
@@ -140,15 +196,15 @@ def main():
             if cmd[0] == "get" and len(cmd) == 2:
 
                 if cmd[1] == "all":
-                    print(thread)
+                    print(MarvelmindHandler().getAll())
 
                 if cmd[1] == "stats":
-                    for b in thread.getStationaryBeacons():
+                    for b in MarvelmindHandler().getStationaryBeacons():
                         print(b)
 
                 if cmd[1].isdigit():
                     addr = int(cmd[1])
-                    beacon = thread.getBeacon(addr)
+                    beacon = MarvelmindHandler().getBeacon(addr)
                     if beacon is not None:
                         print(beacon)
 
@@ -160,8 +216,7 @@ def main():
             print("Exception : ", ex)
             break
 
-    thread.stop()
-    thread.join()
+    MarvelmindHandler().stop()
 
 
 if __name__=="__main__":

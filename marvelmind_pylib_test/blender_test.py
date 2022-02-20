@@ -3,6 +3,8 @@
 import threading
 from dataclasses import dataclass
 
+#import sys
+#sys.path.append("F:\\Universidad\\TFM\\MarvelmindLib\\marvelmind_pylib_test\\")
 import marvelmind_pylib as mpl
 
 @dataclass
@@ -90,29 +92,67 @@ class MarvelmindThread(StoppableThread):
             self.execute()
 
 
-def parse():
-    import sys
-    import argparse
-    import re
+from threading import Lock
 
-    parser = argparse.ArgumentParser(description="Marvelmind console application")
-    parser.add_argument('--usb', required=False, type=str, default="/dev/ttyACM0", help="Marvelmind device (default : /dev/ttyACM0) ")
-    args = parser.parse_args()
+class Singleton(type):
+    _instances = {}
 
-    win2_patt = re.compile("COM\d+")
-    unix_patt = re.compile("/dev/tty\w+")
+    _lock: Lock = Lock()
 
-    if win2_patt.match(args.usb) or unix_patt.match(args.usb):
-        return args.usb, True
+    def __call__(cls, *args, **kwargs):
+        with cls._lock:
+            if cls not in cls._instances:
+                instance = super().__call__(*args, **kwargs)
+                cls._instances[cls] = instance
+        return cls._instances[cls]
 
-    return args.usb, False
+
+class MarvelmindHandler(metaclass=Singleton):
+
+    def __init__(self):
+        self.__thread = None
+
+    def start(self, device, verbose):
+        if self.__thread is None:
+            self.dev = device
+            self.__thread = MarvelmindThread(device=device, verbose=verbose)
+            self.__thread.start()
+
+    def stop(self):
+        if self.__thread is not None and not self.__thread.stopped():
+            self.__thread.stop()
+            self.__thread.join()
+
+            self.__thread = None
+            print("Stopped")
+        else:
+            raise Exception("Thread is not started")
+
+    def getBeacon(self, address):
+        if self.__thread is not None:
+            return self.__thread.getBeacon(address=address)
+        else:
+            raise Exception("Thread is not started")
+
+    def getAll(self):
+        if self.__thread is not None:
+            return self.__thread.getAll()
+        else:
+            raise Exception("Thread is not started")
+
+    def getStationaryBeacons(self):
+        if self.__thread is not None:
+            return self.__thread.getStationaryBeacons()
+        else:
+            raise Exception("Thread is not started")
+
+    def isRunning(self):
+        return self.__thread is not None
+
 
 def main():
 
-    dev, stat = parse()
-    if not stat:
-        print(dev, " not recognized")
-        return
+    dev = "COM6"
 
     import serial
     try:
@@ -124,44 +164,17 @@ def main():
         print(f"Serial port {dev} not available")
         return
 
-    thread = None
+
     try:
-        thread = MarvelmindThread(device=dev, verbose=True)
-        thread.start()
+        MarvelmindHandler().start(dev, True)
     except Exception as ex:
-        if thread is not None: thread.close_device()
         print(ex)
         return
 
-    while True:
-        try:
-            cmd = input(">> ").strip().split(" ")
-            cmd = [t for t in cmd if len(t)>0]
-            if cmd[0] == "get" and len(cmd) == 2:
+    import time
+    time.sleep(5)
 
-                if cmd[1] == "all":
-                    print(thread)
-
-                if cmd[1] == "stats":
-                    for b in thread.getStationaryBeacons():
-                        print(b)
-
-                if cmd[1].isdigit():
-                    addr = int(cmd[1])
-                    beacon = thread.getBeacon(addr)
-                    if beacon is not None:
-                        print(beacon)
-
-            if cmd[0] == "exit":
-                break
-        except KeyboardInterrupt:
-            print("")
-        except Exception as ex:
-            print("Exception : ", ex)
-            break
-
-    thread.stop()
-    thread.join()
+    MarvelmindHandler().stop()
 
 
 if __name__=="__main__":
