@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <locale.h>
 #ifdef WIN32
 #include <windows.h>
 #else
@@ -23,6 +24,15 @@ extern "C" {
 
 using namespace std;
 
+const wchar_t *GetWC(const char *c)
+{
+    const size_t cSize = strlen(c)+1;
+    wchar_t* wc = new wchar_t[cSize];
+    mbstowcs (wc, c, cSize);
+
+    return wc;
+}
+
 class MarvelMindDevice {
     public:
         MarvelMindDevice(string serialPort, bool verbose)
@@ -37,9 +47,8 @@ class MarvelMindDevice {
 
             strcpy(new_serial_port, serialPort.c_str());
 
-            hedge__->ttyFileName = new_serial_port;
+            hedge__->ttyFileName = GetWC(new_serial_port);
             hedge__->verbose = verbose;
-
         };
         
         void start();
@@ -99,7 +108,7 @@ map<int, vector<double>> MarvelMindDevice::getMobileBeaconsPosition()
             double xm, ym, zm, angle;
             double tm;
 
-            tm = ((double) position.timestamp);
+            tm = ((double) position.timestamp.timestamp64);
             xm = ((double) position.x)/1000.0;
             ym = ((double) position.y)/1000.0;
             zm = ((double) position.z)/1000.0;
@@ -134,8 +143,6 @@ map<int, vector<double>> MarvelMindDevice::getStationaryBeaconsPosition()
             double ym = ((double) stat_pos.y)/1000.0;
             double zm = ((double) stat_pos.z)/1000.0;
 
-            // cout << "XYZ " << xm << " " << ym << " " << zm << endl;
-            
             vector<double> pos;
             pos.push_back(xm);
             pos.push_back(ym);
