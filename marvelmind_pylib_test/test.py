@@ -1,7 +1,7 @@
 
 import marvelmind_pylib
 
-dev = marvelmind_pylib.MarvelMindDevice("COM5", True)
+dev = marvelmind_pylib.MarvelMindDevice("COM3", True)
 dev.start()
 
 while True:

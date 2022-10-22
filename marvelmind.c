@@ -872,9 +872,23 @@ Marvelmind_Thread_ (void* param)
             }
         }
     }
-#if (!defined(WIN32)) && (!defined(_WIN64))
-    return NULL;
-#endif
+    // #if (!defined(WIN32)) && (!defined(_WIN64))
+    //    return NULL;
+    // #endif
+
+    #if defined(WIN32) || defined(_WIN64)
+        if(ttyHandle != PORT_NOT_OPENED) {
+            CloseHandle(ttyHandle);
+        }
+    #else
+        close(ttyHandle);
+    #endif
+
+    #if defined(WIN32) || defined(_WIN64)
+        return 0;
+    #else
+        return NULL;
+    #endif
 }
 
 //////////////////////////////////////////////////////////////////////////////
