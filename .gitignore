@@ -1,4 +1,7 @@
 build/
 build*/
+*build/
 releases/
 pybind11_env/
+*env
+.vscode
