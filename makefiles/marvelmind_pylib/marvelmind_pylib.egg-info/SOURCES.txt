@@ -1,0 +1,5 @@
+pyproject.toml
+marvelmind_pylib.egg-info/PKG-INFO
+marvelmind_pylib.egg-info/SOURCES.txt
+marvelmind_pylib.egg-info/dependency_links.txt
+marvelmind_pylib.egg-info/top_level.txt

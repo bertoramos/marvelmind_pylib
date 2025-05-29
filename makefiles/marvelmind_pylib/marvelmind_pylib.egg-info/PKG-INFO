@@ -1,0 +1,6 @@
+Metadata-Version: 2.4
+Name: marvelmind_pylib
+Version: 1.0.0
+Summary: Marvelmind python port
+Author-email: Alberto Ramos Sánchez <alberto.ramos104@alu.ulpgc.es>
+Requires-Python: >=3.11

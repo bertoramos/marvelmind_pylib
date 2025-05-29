@@ -1,0 +1,19 @@
+[build-system]
+requires = [
+    "wheel",
+    "setuptools",
+    "setuptools-scm",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "marvelmind_pylib"
+authors = [
+    {name = "Alberto Ramos Sánchez", email = "alberto.ramos104@alu.ulpgc.es" }
+]
+version = "1.0.0"
+requires-python = ">=3.11"
+description = "Marvelmind python port"
+
+[tool.setuptools]
+py-modules = ["marvelmind_pylib"]
