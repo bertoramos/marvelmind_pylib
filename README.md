@@ -100,7 +100,7 @@ To get a local copy up and running follow these simple example steps.
 ### Installation
 
 ```bash
-$ python pip install https://github.com/bertoramos/marvelmind_pylib/releases/download/{version}/{so-version-file}.zip
+$ python pip install https://github.com/bertoramos/marvelmind_pylib/releases/download/{version}/{so-version-file}.whl
 ```
 
 ### Install from source
@@ -109,30 +109,7 @@ $ python pip install https://github.com/bertoramos/marvelmind_pylib/releases/dow
 
 ##### Unix
 
-1. Create a python virtual environment and install pybind11
-
-    ```bash
-    $ python3 -m venv ./pybind_env
-    $ source activate pybind_env/bin/activate
-    (pybind_env) $ pip install pybind11
-    ```
-
-2. In marvelmind_pylib folder create a build folder
-
-    ```bash
-    (pybind_env) $ cd marvelmind_pylib
-    (pybind_env) $ mkdir build
-    ```
-
-3. In build folder execute : cmake .. -Dpybind11_DIR=$(python -m pybind11 --cmakedir)
-
-    ```bash
-    (pybind_env) $ cd build
-    (pybind_env) $ cmake .. -Dpybind11_DIR=$(python3 -m pybind11 --cmakedir)
-    (pybind_env) $ make
-    ```
-
-4. A file with extension .so must have been created.
+TODO
 
 ##### Windows
 
@@ -140,58 +117,34 @@ $ python pip install https://github.com/bertoramos/marvelmind_pylib/releases/dow
 2. Create a python virtual environment and install pybind11.
 
     ```bash
-    $ python3 -m venv ./pybind_env
-    $ pybind_env\Scripts\activate
-    (pybind_env) $ pip install pybind11
+    $ conda create --prefix .\.venv python=3.11
+    $ conda activate .\.venv
+    $ python -m pip install --upgrade pip
+    (.\.venv) $ python -m pip install pybind11
     ```
 
-3. In marvelmind_pylib folder create a build folder.
+3. Run win_make.bat to build library.
 
-    ```bash
-    (pybind_env) $ cd marvelmind_pylib
-    (pybind_env) $ mkdir build
-    ```
-
-4. In build folder execute
-
-    ```bash
-    (pybind_env) $ cmake ..
-    (pybind_env) $ cmake --build . --config Release --target marvelmind_pylib
-    ```
-
-5. A file with extension .pyd must have been created. You can find it in *Release* folder.
+4. A file with extension .pyd must have been created. You can find it in *makefiles/win_build/Release* folder.
 
 ##### Installation
 
-1. Deactivate environment. In this example we will install the *marvelmind_pylib* module in the global python3 installation. Choose where you want to install it and use that python executable instead.
+1. Copy the .pyd file inside makefiles/marvelmind_pylib/marvelmind_pylib folder.
+2. Modify version and requires-python parameters pyproject.toml file.
 
-    ```bash
-    (pybind_env) $ deactivate # Deactivate pybind_env environment
-    ```
+```toml
+version = "1.0.0"
+requires-python = ">=3.11"
+```
 
-2. Copy the previously compiled .so/.pyd file in a new empty folder.
+3. Build wheel:
 
-3. Copy the setup.py file to the newly created folder.
+```bash
+  (.\.venv) $ python -m pip install build
+  (.\.venv) $ python -m build
+``
 
-4. Modify setup.py file.
-
-    Change line:
-
-    ```python
-    package_data = {'': ['{dynamic file}']} # add dynamic file name
-    ```
-
-    to the name of the .so/.pyd file:
-
-    ```python
-    package_data = {'': ['marvelmind_pylib.cpython-39-x86_64-linux-gnu.so']}
-    ```
-
-5. Execute following command inside setup.py folder:
-
-    ```bash
-        $ python -m pip install .
-    ```
+4. Install wheel. Inside makefiles/marvelmind_pylib/dist folder you will find the wheel and tar files, ready to be installed.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

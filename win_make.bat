@@ -4,8 +4,8 @@ rem Sets pybind11 cmake directory
 for /F %%i in ('python -m pybind11 --cmakedir') do set pybind11_DIR=%%i
 
 rem Creates build directory
-mkdir .\marvelmind_pylib\win_build
-cd .\marvelmind_pylib\win_build
+mkdir .\makefiles\win_build
+cd .\makefiles\win_build
 
 rem Builds
 cmake ..

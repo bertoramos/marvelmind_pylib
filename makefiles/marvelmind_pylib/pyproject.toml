@@ -16,4 +16,8 @@ requires-python = ">=3.11"
 description = "Marvelmind python port"
 
 [tool.setuptools]
-py-modules = ["marvelmind_pylib"]
+packages = ["marvelmind_pylib"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"marvelmind_pylib" = ["*.pyd"]

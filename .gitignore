@@ -1,7 +1,13 @@
 build/
 build*/
 *build/
+win_build/
+unix_build/
 releases/
+releases/*
 pybind11_env/
 *env
 .vscode
+*.pyd
+dist
+*.egg-info
