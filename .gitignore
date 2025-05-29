@@ -10,4 +10,5 @@ pybind11_env/
 .vscode
 *.pyd
 dist
-*.egg-info
+*.egg*
+.egg-info/*
